@@ -1,0 +1,67 @@
+1  res_22545 id_21 
+2 	 res_1467 
+3 		 id_13  id_18  id_8 res_16739 
+4 	 res_1470 id_66 
+5 		 res_1467  id_16 res_16739 
+6 	res_12017 
+7 		id_79 
+8 		 res_417  id_8  id_72  num_22  id_8 res_4481 
+9 			id_38 
+10 		res_4145 
+11 			id_38 
+12 	res_1339 
+13 res_12017 
+14 	id_52 
+15 	 id_5 id_73 
+16 	 res_13817  id_37 res_411 
+17 		res_12017 
+18 		id_66 
+19 		 res_14111 id_18 
+20 		id_48 
+21 	res_1339 
+22 res_1339 
+23 
+24 'ERROR' 
+25 	id_15 
+26 			
+
+----------------------- ERROS ENCONRTRADOS -----------------------------
+
+ERRO DE SINTAXE! linha : 24
+
+
+----------------------- INFORMAÇÔES DA COMPILAÇÂO -----------------------------
+
+TOKEN DAS PALAVRAS RESERVADAS
+
+	do	:	411
+	if	:	417
+	end	:	1339
+	var	:	1467
+	procedure	:	1470
+	else	:	4145
+	then	:	4481
+	begin	:	12017
+	while	:	13817
+	write	:	14111
+	integer	:	16739
+	program	:	22545
+
+
+TOKEN DOS IDENTIFICADORES
+
+	s0	:	5
+	i	:	8
+	n	:	13
+	dadw	:	15
+	q	:	16
+	s	:	18
+	exemplo1	:	21
+	in	:	37
+	ssq	:	38
+	ii1	:	48
+	readn	:	52
+	soma	:	66
+	div	:	72
+	i0	:	73
+	qii	:	79

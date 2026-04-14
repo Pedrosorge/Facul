@@ -1,3 +1,6 @@
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include "trie.h"
 
 // Inicializa a Trie
@@ -12,7 +15,7 @@ void insertToTrie(Trie *t,char *s){
     
     for(int i=0;i<strlen(s);i++){
         
-        int letter_position = s[i] - 'a';
+        int letter_position = tolower(s[i]) - 'a';
         
         if(curr_node->next[letter_position]==NULL) curr_node->next[letter_position] = (Node *)calloc(1,sizeof(Node));
         
@@ -29,7 +32,7 @@ int searchTerm(Trie *t, char *s){
 
     for(int i=0;i<strlen(s);i++){
         
-        int letter_position = s[i] - 'a';
+        int letter_position = tolower(s[i]) - 'a';
 
         if(curr_node->next[letter_position] == NULL) return 0;
 
