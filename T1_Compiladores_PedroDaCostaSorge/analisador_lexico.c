@@ -66,60 +66,73 @@ void PROXIMO(){
 // identificador : alfa + alfanum/alfa
 // reservada : alfa
 // valor : num
-// 
+// operadores : op
 
-// Digitos da variável flags:
-
-// Bit 0: Poode ser identificador
-// Bit 1: Pode ser reservada
-// Bit 2: Pode ser valor
-
+// verifica se o caractere é um operador
 int isoperator(char c){
-    return  ((c>=40) && (c<=45)) || ((c>=58) && (c>=62)); 
+    return  ((c>=40) && (c<=45)) || ((c>=58) && (c<=62)); 
 }
 
 // Principal lógica do analisador léxico
 void CODIGO(){
    
     
-    
     while(prox_pointer != EOF){
-       
+        
         char buffer[100];
         int buff_point = 0;
-        unsigned int flags = 0B000; 
+        unsigned int flags = 0B0000; 
+        
+        // --------------------------
+        // Digitos da variável flags:
+        // --------------------------
+        // Bit 0: Pode ser identificador
+        // Bit 1: Pode ser reservada
+        // Bit 2: Pode ser número
+        // Bit 3: Pode ser operador
+        
+        
         
         // Analisa conjunto
-        // while(isalpha(prox_pointer) || isdigit(prox_pointer) || ){
-        while(prox_pointer > 32){
-            printf("%c : %d %lu \n", prox_pointer, prox_pointer, ftell(origin));
+        int interruption = 1;
+        while(prox_pointer > 32 && interruption){
             // Se receber um caractere alfabético
             if(isalpha(prox_pointer)){
     
-                if(!buff_point) {
-                    flags = 0B011; 
-                    buffer[buff_point++] = prox_pointer;
-                }
-                else if(flags & 0B011) buffer[buff_point++] = prox_pointer;   
-                else flags = 0;
+                if(!buff_point) // Se o buffer tiver vazio
+                    flags = 0B0011; 
+                else if(!(flags & 0B0011)) // Se o que estiver no buffer não pode ser identificador ou palavra reservada 
+                    flags = 0;
                 
             }
             // Se receber um número
             else if(isdigit(prox_pointer)){
                 
-                if(!buff_point){
-                    flags = 0B100;
-                    buffer[buff_point++] = prox_pointer;
-                }
-                else if(flags & 0B101) buffer[buff_point++] = prox_pointer;
-                else if(flags & 0B010){
-                    buffer[buff_point++] = prox_pointer;
-                    flags = 0B001;
-                }
-                else flags = 0;
+                if(!buff_point) // Se o buffer estiver vazio
+                    flags = 0B0100;
+                else if(flags & 0B0010) // Se o que tá no buffer pudesse ser uma palavra reservada
+                    flags = 0B0001;
+                else if(!(flags & 0B0101)) // Só entra caso o que tá no buffer não pode ser numero nem reservada
+                    flags = 0;
+            
+            }
+            // Se receber um operador
+            else if(isoperator(prox_pointer)){
                 
+                if(!buff_point) // Se o buffer tiver vazio
+                {
+                    flags = 0B1000;
+                    interruption^=1;
+                }
+                else if(!(flags & 0B1000)) // Se o que tá no buffer não pode ser operador
+                    break;
+            }
+            else{
+                printf("Caractere inválido: %c\n", prox_pointer);
+                flags=0;
             }
             
+            buffer[buff_point++] = prox_pointer;
             PROXIMO(); // Avança leitura
             
         }
@@ -127,14 +140,13 @@ void CODIGO(){
         if(prox_pointer=='\t' || prox_pointer==' ') fprintf(destin,"%c",prox_pointer);
 
         buffer[buff_point] = '\0';  
-        printf("palavra lida: '%s'", buffer);
 
         if(!strcmp(buffer,"\0")); // Nenhum caractere foi achado
         else if(!flags){ // ERRO DE SYNTAXE
             fprintf(destin,"'ERROR' ");
             push_back(error_vector, SYNTAX_ERROR, line_pointer);
         }
-        else if((flags & 0B010) && searchTerm(t,buffer)){
+        else if((flags & 0B0010) && searchTerm(t,buffer)){
 
             int id = searchWord(ID_reserved,buffer); 
             if(id == -1) id = insertWord(ID_reserved,buffer);
@@ -142,7 +154,7 @@ void CODIGO(){
             fprintf(destin,"res_%d ", id);
 
         }
-        else if((flags & 0B001)){
+        else if(flags & 0B0001){
 
             int id = searchWord(ID_variables,buffer); 
             if(id == -1) id = insertWord(ID_variables,buffer);
@@ -150,12 +162,23 @@ void CODIGO(){
             fprintf(destin,"id_%d ", id);
 
         }
+        else if(flags & 0B1000){
+
+            int id = searchWord(ID_operators,buffer); 
+            if(id == -1) id = insertWord(ID_operators,buffer);
+            if(id<0) printf("Não foi possível designar id");
+            fprintf(destin,"op_%d ", id);
+            continue;
+
+        }
         else{
 
-            fprintf(destin,"num_%s", buffer);
+            fprintf(destin,"num_%s ", buffer);
         
         }
         
+        interruption = 1;
+        if(prox_pointer > 32) continue;
         PROXIMO(); // Avança leitura
 
     }
@@ -188,7 +211,7 @@ int main() {
     // Inicializa as HashTables
     ID_reserved = initializeHashTable(100003);
     ID_variables = initializeHashTable(100003);
-    ID_variables = initializeHashTable(97);
+    ID_operators = initializeHashTable(97);
 
     // Inicializa vetor de erros
     error_vector = initializeVector();
@@ -208,7 +231,8 @@ int main() {
     printHashValues(ID_reserved, destin);
     fprintf(destin, "\n\nTOKEN DOS IDENTIFICADORES\n\n");
     printHashValues(ID_variables, destin);
-
+    fprintf(destin, "\n\nTOKEN DOS OPERADORES\n\n");
+    printHashValues(ID_operators, destin);
 
     return 0;
 

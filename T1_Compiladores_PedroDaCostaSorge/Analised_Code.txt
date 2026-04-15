@@ -1,33 +1,35 @@
-1  res_22545 id_21 
+1  res_22545 id_46108 op_59 
 2 	 res_1467 
-3 		 id_13  id_18  id_8 res_16739 
-4 	 res_1470 id_66 
-5 		 res_1467  id_16 res_16739 
+3 		id_110  op_44  id_115  op_44  id_105  op_58  res_16739 op_59 
+4 	 res_1470 id_4528 op_59 
+5 		 res_1467 id_113  op_58  res_16739 op_59 
 6 	res_12017 
-7 		id_79 
-8 		 res_417  id_8  id_72  num_22  id_8 res_4481 
-9 			id_38 
+7 		id_113 op_58 op_61 id_105 op_42 id_105 op_59 
+8 		 res_417 op_40  id_105  id_1333 num_2 op_41 op_42  num_2  op_61   id_105 res_4481 
+9 			id_115 op_58 op_61 id_115 op_43 id_113 
 10 		res_4145 
-11 			id_38 
-12 	res_1339 
+11 			id_115 op_58 op_61 id_115 op_45 id_113 op_59 
+12 	res_1339 op_59 
 13 res_12017 
-14 	id_52 
-15 	 id_5 id_73 
-16 	 res_13817  id_37 res_411 
+14 	res_4378 op_40 id_110 op_41 op_59 
+15 	id_115 op_58 op_61 num_0  op_59  id_105 op_58 op_61 num_0 op_59 
+16 	 res_13817 id_105 op_60 op_61  id_110 res_411 
 17 		res_12017 
-18 		id_66 
-19 		 res_14111 id_18 
-20 		id_48 
+18 		id_4528 op_59 
+19 		 res_14111 op_40 id_115 op_41 op_59 
+20 		id_105 op_58 op_61 id_105 op_43 num_1 op_59 
 21 	res_1339 
-22 res_1339 
+22 'ERROR' 
 23 
 24 'ERROR' 
-25 	id_15 
+25 	'ERROR' 
 26 			
 
 ----------------------- ERROS ENCONRTRADOS -----------------------------
 
+ERRO DE SINTAXE! linha : 22
 ERRO DE SINTAXE! linha : 24
+ERRO DE SINTAXE! linha : 25
 
 
 ----------------------- INFORMAÇÔES DA COMPILAÇÂO -----------------------------
@@ -40,6 +42,7 @@ TOKEN DAS PALAVRAS RESERVADAS
 	var	:	1467
 	procedure	:	1470
 	else	:	4145
+	read	:	4378
 	then	:	4481
 	begin	:	12017
 	while	:	13817
@@ -50,18 +53,24 @@ TOKEN DAS PALAVRAS RESERVADAS
 
 TOKEN DOS IDENTIFICADORES
 
-	s0	:	5
-	i	:	8
-	n	:	13
-	dadw	:	15
-	q	:	16
-	s	:	18
-	exemplo1	:	21
-	in	:	37
-	ssq	:	38
-	ii1	:	48
-	readn	:	52
-	soma	:	66
-	div	:	72
-	i0	:	73
-	qii	:	79
+	i	:	105
+	n	:	110
+	q	:	113
+	s	:	115
+	div	:	1333
+	soma	:	4528
+	exemplo1	:	46108
+
+
+TOKEN DOS OPERADORES
+
+	(	:	40
+	)	:	41
+	*	:	42
+	+	:	43
+	,	:	44
+	-	:	45
+	:	:	58
+	;	:	59
+	<	:	60
+	=	:	61
