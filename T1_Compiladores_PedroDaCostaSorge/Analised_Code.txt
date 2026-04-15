@@ -1,29 +1,29 @@
-1  res_22545 id_46108 op_59 
-2 	 res_1467 
-3 		id_110  op_44  id_115  op_44  id_105  op_58  res_16739 op_59 
-4 	 res_1470 id_4528 op_59 
-5 		 res_1467 id_113  op_58  res_16739 op_59 
-6 	res_12017 
-7 		id_113 op_58 op_61 id_105 op_42 id_105 op_59 
-8 		 res_417 op_40  id_105  id_1333 num_2 op_41 op_42  num_2  op_61   id_105 res_4481 
-9 			id_115 op_58 op_61 id_115 op_43 id_113 
-10 		res_4145 
-11 			id_115 op_58 op_61 id_115 op_45 id_113 op_59 
-12 	res_1339 op_59 
-13 res_12017 
-14 	res_4378 op_40 id_110 op_41 op_59 
-15 	id_115 op_58 op_61 num_0  op_59  id_105 op_58 op_61 num_0 op_59 
-16 	 res_13817 id_105 op_60 op_61  id_110 res_411 
-17 		res_12017 
-18 		id_4528 op_59 
-19 		 res_14111 op_40 id_115 op_41 op_59 
-20 		id_105 op_58 op_61 id_105 op_43 num_1 op_59 
-21 	res_1339 
-22 'ERROR' 
-23 
-24 'ERROR' 
-25 	'ERROR' 
-26 			
+1	 res_22545 id_46108 op_59 
+2		 res_1467 
+3			id_110  op_44  id_115  op_44  id_105  op_58  res_16739 op_59 
+4		 res_1470 id_4528 op_59 
+5			 res_1467 id_113  op_58  res_16739 op_59 
+6		res_12017 
+7			id_113 op_41 id_105 op_42 id_105 op_59 
+8			 res_417 op_40  id_105  id_1333 num_2 op_43 op_42  num_2  op_61   id_105 res_4481 
+9				id_115 op_41 id_115 op_45 id_113 
+10			res_4145 
+11				id_115 op_41 id_115 op_46 id_113 op_59 
+12		res_1339 op_59 
+13	res_12017 
+14		res_4378 op_40 id_110 op_43 op_59 
+15		id_115 op_41 num_0  op_59  id_105 op_41 num_0 op_59 
+16		 res_13817 id_105 op_47  id_110 res_411 
+17			res_12017 
+18			id_4528 op_59 
+19			 res_14111 op_40 id_115 op_43 op_59 
+20			id_105 op_41 id_105 op_45 num_1 op_59 
+21		res_1339 
+22	'ERROR' 
+23	
+24	'ERROR' 
+25		'ERROR' 
+26				
 
 ----------------------- ERROS ENCONRTRADOS -----------------------------
 
@@ -65,12 +65,13 @@ TOKEN DOS IDENTIFICADORES
 TOKEN DOS OPERADORES
 
 	(	:	40
-	)	:	41
+	:=	:	41
 	*	:	42
-	+	:	43
+	)	:	43
 	,	:	44
-	-	:	45
+	+	:	45
+	-	:	46
+	<=	:	47
 	:	:	58
 	;	:	59
-	<	:	60
 	=	:	61

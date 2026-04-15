@@ -33,7 +33,6 @@ void PROXIMO();
 void CODIGO();
 void ERRO(int err_code, int line_num);
 
-
 // Códigos de erro:
 #define SYNTAX_ERROR 1
 
@@ -56,7 +55,7 @@ void PROXIMO(){
     if( prox_pointer == '\n' || prox_pointer == 0){
         line_pointer++;
         if(prox_pointer) fputc(prox_pointer,destin);
-        fprintf(destin,"%d ", line_pointer);
+        fprintf(destin,"%d\t", line_pointer);
     }
     
     prox_pointer = fgetc(origin);
@@ -91,8 +90,6 @@ void CODIGO(){
         // Bit 2: Pode ser número
         // Bit 3: Pode ser operador
         
-        
-        
         // Analisa conjunto
         int interruption = 1;
         while(prox_pointer > 32 && interruption){
@@ -100,7 +97,7 @@ void CODIGO(){
             if(isalpha(prox_pointer)){
     
                 if(!buff_point) // Se o buffer tiver vazio
-                    flags = 0B0011; 
+                    flags = 0B0011;
                 else if(!(flags & 0B0011)) // Se o que estiver no buffer não pode ser identificador ou palavra reservada 
                     flags = 0;
                 
@@ -122,10 +119,17 @@ void CODIGO(){
                 if(!buff_point) // Se o buffer tiver vazio
                 {
                     flags = 0B1000;
-                    interruption^=1;
+                    if(prox_pointer == '<' || prox_pointer == '>' || prox_pointer == ':'){
+                        buffer[buff_point++] = prox_pointer;
+                        PROXIMO();
+                        if(prox_pointer == '=') interruption = 0;
+                        else break;
+                    }
+                    interruption = 0;
                 }
-                else if(!(flags & 0B1000)) // Se o que tá no buffer não pode ser operador
+                else
                     break;
+
             }
             else{
                 printf("Caractere inválido: %c\n", prox_pointer);
@@ -143,6 +147,7 @@ void CODIGO(){
 
         if(!strcmp(buffer,"\0")); // Nenhum caractere foi achado
         else if(!flags){ // ERRO DE SYNTAXE
+            printf("palavra : %s não reconecida\n" , buffer);
             fprintf(destin,"'ERROR' ");
             push_back(error_vector, SYNTAX_ERROR, line_pointer);
         }
