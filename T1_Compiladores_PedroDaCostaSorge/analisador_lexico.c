@@ -243,6 +243,19 @@ int main() {
     fprintf(destin, "\n\nTOKEN DOS OPERADORES\n\n");
     printHashValues(ID_operators, destin);
 
+
+    // Desalocando estruturas
+    freeHashing(ID_operators);
+    freeHashing(ID_reserved);
+    freeHashing(ID_variables);
+    printf("Desalocou as Hashing!!\n");
+    
+    freeVector(error_vector);    
+    printf("Desalocou o Vector!!\n");
+
+    freeTrie(t);
+    printf("Desalocou a Trie!!\n");
+
     return 0;
 
 }

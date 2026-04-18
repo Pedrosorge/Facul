@@ -47,8 +47,19 @@ int insertWord(HashTable *h, char *word) {
     return -1;
 }
 
-void printHashValues(HashTable *h, FILE *stream){
-    for(int i=0;i<h->size;i++){
+// Imprime os valores da Hashing
+void printHashValues(HashTable *h, FILE *stream) {
+    for(int i=0;i<h->size;i++) {
         if(h->palavras[i]) fprintf(stream,"\t%s\t:\t%d\n", h->palavras[i], i);
     }
+}
+
+// Desaloca memória da Hashing
+void freeHashing(HashTable *h) {
+    for(int i=0;i<h->size;i++) {
+        if(h->palavras[i] != NULL)
+            free(h->palavras[i]);
+    }
+    free(h->palavras);
+    free(h);
 }

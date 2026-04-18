@@ -44,11 +44,23 @@ int searchTerm(Trie *t, char *s){
 
 }
 
+// Desaloca os nós da Trie
+void freeTrieNode(Node *n){
+    for(int i=0;i<26;i++){
+        if(n->next[i]!=NULL) freeTrieNode(n->next[i]);
+    }
+    free(n);
+}
 
-
-
-
-
+// Desaloca Trie
+void freeTrie(Trie *t){
+    Node *aux = t->root;
+    for(int i=0;i<26;i++){
+        if(aux->next[i]!=NULL) freeTrieNode(aux->next[i]);
+    }
+    free(t->root);
+    free(t);
+}
 
 
 

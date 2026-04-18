@@ -14,5 +14,6 @@ typedef struct{
 
 VectorError* initializeVector();
 void push_back(VectorError *vec,int v, int line);
+void freeVector(VectorError *v);
 
 #endif

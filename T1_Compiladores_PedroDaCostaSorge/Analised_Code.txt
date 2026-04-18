@@ -25,7 +25,7 @@
 
 ----------------------- ERROS ENCONRTRADOS -----------------------------
 
-Nenum erro de sintaxe encontrado!!
+Nenhum erro de sintaxe encontrado
 
 ----------------------- INFORMAÇÔES DA COMPILAÇÂO -----------------------------
 

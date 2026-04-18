@@ -13,5 +13,7 @@ typedef struct{
 void initializeTrie(Trie *t);
 void insertToTrie(Trie *t, char *s);
 int searchTerm(Trie *t, char *s);
+void freeTrie(Trie *t);
+void freeTrieNode(Node *n);
 
 #endif

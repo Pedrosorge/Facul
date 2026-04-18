@@ -13,5 +13,6 @@ int hashFunction(int size, char *palavra, int try_num);
 int searchWord(HashTable *h, char *word);
 int insertWord(HashTable *h, char *word);
 void printHashValues(HashTable *h, FILE *stream);
+void freeHashing(HashTable *h);
 
 #endif

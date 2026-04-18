@@ -23,3 +23,15 @@ void push_back(VectorError *vec,int err, int line){
     vec->tail->next = aux;
     vec->tail = aux;
 }
+
+// Desaloca o vetor
+void freeVector(VectorError *v){
+    VectorErrorNode *aux = v->head;
+
+    while(aux != NULL){
+        VectorErrorNode *temp = aux;
+        free(temp);
+        aux=aux->next;
+    }
+    free(v);
+}
