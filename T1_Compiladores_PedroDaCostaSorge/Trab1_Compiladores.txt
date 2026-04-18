@@ -21,6 +21,4 @@ begin
 	end
 end.
 
-12rqw
-@dadw	
 			

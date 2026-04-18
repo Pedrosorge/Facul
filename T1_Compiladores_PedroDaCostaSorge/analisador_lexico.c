@@ -69,7 +69,7 @@ void PROXIMO(){
 
 // verifica se o caractere é um operador
 int isoperator(char c){
-    return  ((c>=40) && (c<=45)) || ((c>=58) && (c<=62)); 
+    return  (((c>=40) && (c<=46)) || ((c>=58) && (c<=62))); 
 }
 
 // Principal lógica do analisador léxico
@@ -151,6 +151,15 @@ void CODIGO(){
             fprintf(destin,"'ERROR' ");
             push_back(error_vector, SYNTAX_ERROR, line_pointer);
         }
+        else if(flags & 0B1000 || !strcmp("div", buffer)){
+
+            int id = searchWord(ID_operators,buffer); 
+            if(id == -1) id = insertWord(ID_operators,buffer);
+            if(id<0) printf("Não foi possível designar id");
+            fprintf(destin,"op_%d ", id);
+            continue;
+
+        }
         else if((flags & 0B0010) && searchTerm(t,buffer)){
 
             int id = searchWord(ID_reserved,buffer); 
@@ -165,15 +174,6 @@ void CODIGO(){
             if(id == -1) id = insertWord(ID_variables,buffer);
             if(id<0) printf("Não foi possível designar id");
             fprintf(destin,"id_%d ", id);
-
-        }
-        else if(flags & 0B1000){
-
-            int id = searchWord(ID_operators,buffer); 
-            if(id == -1) id = insertWord(ID_operators,buffer);
-            if(id<0) printf("Não foi possível designar id");
-            fprintf(destin,"op_%d ", id);
-            continue;
 
         }
         else{
@@ -206,6 +206,7 @@ int main() {
     t = (Trie *)malloc(sizeof(Trie));
     initializeTrie(t); 
 
+    // Se adicionar ou remover palavras reservadas lembrar de aumentar ou reduzir a variável 'size'
     char *reservadas[] = {"program", "var", "integer" , "procedure", "begin", "if", "then", "else", "end", "read", "write", "while", "do"};
     int size = 13;
     
@@ -226,6 +227,9 @@ int main() {
     fprintf(destin,"\n\n----------------------- ERROS ENCONRTRADOS -----------------------------\n\n");
 
     VectorErrorNode *aux = error_vector->head;
+    if(aux == NULL){
+        fputs("Nenhum erro de sintaxe encontrado", destin);
+    }
     while(aux!=NULL) {
         ERRO(aux->value_err, aux->value_line);
         aux=aux->next;
