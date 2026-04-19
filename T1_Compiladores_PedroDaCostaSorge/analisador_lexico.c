@@ -58,7 +58,7 @@ void PROXIMO(){
         fprintf(destin,"%d\t", line_pointer);
     }
     
-    prox_pointer = fgetc(origin);
+    prox_pointer = tolower(fgetc(origin));
 
 }
 
@@ -248,13 +248,8 @@ int main() {
     freeHashing(ID_operators);
     freeHashing(ID_reserved);
     freeHashing(ID_variables);
-    printf("Desalocou as Hashing!!\n");
-    
     freeVector(error_vector);    
-    printf("Desalocou o Vector!!\n");
-
     freeTrie(t);
-    printf("Desalocou a Trie!!\n");
 
     return 0;
 
