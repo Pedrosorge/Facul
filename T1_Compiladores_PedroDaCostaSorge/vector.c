@@ -30,8 +30,8 @@ void freeVector(VectorError *v){
 
     while(aux != NULL){
         VectorErrorNode *temp = aux;
-        free(temp);
         aux=aux->next;
+        free(temp);
     }
     free(v);
 }

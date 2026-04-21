@@ -65,7 +65,7 @@ void PROXIMO(){
 // identificador : alfa + alfanum/alfa
 // reservada : alfa
 // valor : num
-// operadores : op
+// operadores : op || op + op || div
 
 // verifica se o caractere é um operador
 int isoperator(char c){
@@ -193,7 +193,7 @@ void CODIGO(){
 int main() {
 
     origin = fopen("./Trab1_Compiladores.txt", "r");
-    destin = fopen("./Analised_Code.txt", "w+");
+    destin = fopen("./Analysed_Code.txt", "w+");
 
     if (origin == NULL || destin == NULL) {
         perror("Erro ao abrir arquivo\n");

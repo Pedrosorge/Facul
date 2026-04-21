@@ -20,3 +20,5 @@ begin
 		i:=i+1;
 	end
 end.
+
+i:=10AC;
