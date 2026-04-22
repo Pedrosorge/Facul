@@ -151,7 +151,7 @@ void CODIGO(){
             fprintf(destin,"'ERROR' ");
             push_back(error_vector, SYNTAX_ERROR, line_pointer);
         }
-        else if(flags & 0B1000 || !strcmp("div", buffer)){
+        else if(flags & 0B1000){
 
             int id = searchWord(ID_operators,buffer); 
             if(id == -1) id = insertWord(ID_operators,buffer);
@@ -207,8 +207,8 @@ int main() {
     initializeTrie(t); 
 
     // Se adicionar ou remover palavras reservadas lembrar de aumentar ou reduzir a variável 'size'
-    char *reservadas[] = {"program", "var", "integer" , "procedure", "begin", "if", "then", "else", "end", "read", "write", "while", "do"};
-    int size = 13;
+    char *reservadas[] = {"program", "var", "integer" , "procedure", "begin", "if", "then", "else", "end", "read", "write", "while", "do", "label", "function", "or", "and"};
+    int size = 17;
     
     for(int i=0;i<size;i++){
         insertToTrie(t,reservadas[i]);
