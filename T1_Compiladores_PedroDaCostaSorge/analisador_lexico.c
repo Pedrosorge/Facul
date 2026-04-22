@@ -207,8 +207,8 @@ int main() {
     initializeTrie(t); 
 
     // Se adicionar ou remover palavras reservadas lembrar de aumentar ou reduzir a variável 'size'
-    char *reservadas[] = {"program", "var", "integer" , "procedure", "begin", "if", "then", "else", "end", "read", "write", "while", "do", "label", "function", "or", "and"};
-    int size = 17;
+    char *reservadas[] = {"program", "var", "integer" , "procedure", "begin", "if", "then", "else", "end", "read", "write", "while", "do", "label", "function", "or", "and", "div"};
+    int size = 18;
     
     for(int i=0;i<size;i++){
         insertToTrie(t,reservadas[i]);
