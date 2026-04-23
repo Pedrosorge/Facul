@@ -34,14 +34,18 @@ void CODIGO();
 void ERRO(int err_code, int line_num);
 
 // Códigos de erro:
-#define SYNTAX_ERROR 1
+#define LEXICAL_ERROR_BAD_FORMATTING 1
+#define LEXICAL_ERROR_UNKNOW_CHAR 2
 
 void ERRO(int err_code, int line_num){
 
     switch (err_code)
     {
-        case SYNTAX_ERROR:  
-            fprintf(destin, "ERRO DE SINTAXE! linha : %d\n", line_num);
+        case LEXICAL_ERROR_BAD_FORMATTING:  
+            fprintf(destin, "ERRO DE LEXICO! Palavra mal formatada na linha : %d\n", line_num);
+            break;
+        case LEXICAL_ERROR_UNKNOW_CHAR:  
+            fprintf(destin, "ERRO DE LEXICO! Caractere desconhecida na linha : %d\n", line_num);
             break;
         default:
             break;
@@ -92,6 +96,7 @@ void CODIGO(){
         
         // Analisa conjunto
         int interruption = 1;
+        int unk_char = 0;
         while(prox_pointer > 32 && interruption){
             // Se receber um caractere alfabético
             if(isalpha(prox_pointer)){
@@ -133,6 +138,9 @@ void CODIGO(){
             }
             else{
                 printf("Caractere inválido: %c\n", prox_pointer);
+                fprintf(destin,"'ERROR' ");
+                push_back(error_vector, LEXICAL_ERROR_UNKNOW_CHAR, line_pointer);
+                unk_char=1;
                 flags=0;
             }
             
@@ -146,10 +154,11 @@ void CODIGO(){
         buffer[buff_point] = '\0';  
 
         if(!strcmp(buffer,"\0")); // Nenhum caractere foi achado
+        else if(unk_char); //
         else if(!flags){ // ERRO DE SYNTAXE
             printf("palavra : %s não reconecida\n" , buffer);
             fprintf(destin,"'ERROR' ");
-            push_back(error_vector, SYNTAX_ERROR, line_pointer);
+            push_back(error_vector, LEXICAL_ERROR_BAD_FORMATTING, line_pointer);
         }
         else if(flags & 0B1000){
 

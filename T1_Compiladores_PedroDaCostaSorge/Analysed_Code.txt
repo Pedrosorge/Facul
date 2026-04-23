@@ -21,12 +21,13 @@
 21		res_1339 
 22	res_1339 op_48 
 23	
-24	id_105 op_41 'ERROR' op_59 
-25	
+24	'ERROR' 
+25	'ERROR' 
 
 ----------------------- ERROS ENCONRTRADOS -----------------------------
 
-ERRO DE SINTAXE! linha : 24
+ERRO DE LEXICO! Caractere desconhecida na linha : 24
+ERRO DE LEXICO! Palavra mal formatada na linha : 25
 
 
 ----------------------- INFORMAÇÔES DA COMPILAÇÂO -----------------------------
