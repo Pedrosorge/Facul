@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "trie.h"
-#include "hashing.h"
-#include "vector.h"
+#include "./data_structures/hashing.h"
+#include "./data_structures/trie.h"
+#include "./data_structures/vector.h"
 
 // Dicionário de palavras reservadas
 Trie *t;
