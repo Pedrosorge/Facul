@@ -54,12 +54,12 @@ void MergeSort::intercalate(unsigned int s, unsigned int m, unsigned int e, std:
 
 std::string MergeSort::generateRelatory(){
 
-    if(runs == 0) return "Esse algoritmo não foi rodado nenhuma vez!!!";
+    if(runs == 0) return "\tEsse algoritmo não foi rodado nenhuma vez!!!";
 
-    std::string s = "---------------- Merge Sort -------------------\n";
-    s+= "Número de Testes: " + std::to_string(runs) + " testes\n";
-    s+= "Média de Tempo: " + std::to_string(milisseconds/runs) + " ms\n";
-    s+= "Média de Comparatções: " + std::to_string(comparations/runs) + " ms\n";
+    std::string s;
+    s+= "\t-> Número de Testes: " + std::to_string(runs) + " testes\n";
+    s+= "\t-> Média de Tempo: " + std::to_string(milisseconds/runs) + " ms\n";
+    s+= "\t-> Média de Comparatções: " + std::to_string(comparations/runs) + " comparações\n";
 
     return s;
 }

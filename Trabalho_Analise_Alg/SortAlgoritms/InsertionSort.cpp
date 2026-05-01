@@ -11,12 +11,11 @@ InsertionSort::InsertionSort() {
 
 std::vector<int> InsertionSort::sort(std::vector<int> vet) {
 
-    if(vet.size()>=100000) {
+    if(vet.size()>=1000000) {
         throw std::runtime_error("Ordenar esse vetor pode levar segundos usando Insertion Sort!!");
     }
 
     Timer t;
-    int swap_count = 0;
 
     t.startTimer();
     for(int i=1;i<vet.size();i++){
@@ -24,12 +23,11 @@ std::vector<int> InsertionSort::sort(std::vector<int> vet) {
         for(int j=i;j>0 &&  vet[j-1] > vet[j];j--){
             std::swap(vet[j-1],vet[j]);
             comparations++;
-            swap_count++;
+            num_swaps++;
         }
     }
 
     runs++;
-    num_swaps += swap_count;
     milisseconds += t.endTimer();
 
     return vet;
@@ -38,13 +36,12 @@ std::vector<int> InsertionSort::sort(std::vector<int> vet) {
 
 std::string InsertionSort::generateRelatory() {
 
-    std::string s =  "----------------- Insertion Sort ------------------\n";
-    if(runs == 0) return "Esse algoritmo não foi rodado nenhuma vez!!\n";
-
-    s+=  "Número de Testes: " + std::to_string(runs) + " testes\n";
-    s+=  "Média de Swaps: " + std::to_string(num_swaps/runs) + " swaps\n";
-    s+=  "Média de Comparações: " + std::to_string(comparations/runs) + " swaps\n";
-    s+=  "Média de Tempo: " + std::to_string(milisseconds/runs) + " ms\n"; 
+    if(runs == 0) return "\tEsse algoritmo não foi rodado nenhuma vez!!\n";
+    std::string s;
+    s+=  "\t-> Número de Testes: " + std::to_string(runs) + " testes\n";
+    s+=  "\t-> Média de Swaps: " + std::to_string(num_swaps/runs) + " swaps\n";
+    s+=  "\t-> Média de Comparações: " + std::to_string(comparations/runs) + " comparações\n";
+    s+=  "\t-> Média de Tempo: " + std::to_string(milisseconds/runs) + " ms\n"; 
     return s; 
 };
 

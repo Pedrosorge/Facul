@@ -43,7 +43,7 @@ unsigned int QuickSort::position_pivot(unsigned int begin, unsigned int end, std
         }
         // Se c (vet[end-1]) é a mediana, ele já está na posição correta
     }
-     
+
     int pivot_value = vet[end - 1];
     unsigned int i = begin;
 
@@ -73,12 +73,13 @@ void QuickSort::quick(unsigned int begin, unsigned int end, std::vector<int>& ve
 
 std::string QuickSort::generateRelatory(){
 
-    if(runs == 0) return "Esse algoritmo não foi rodado nenhuma vez!!\n";
-    std::string s = "----------------- Quick Sort ------------------ \n";
-    s+=  "Número de Testes: " + std::to_string(runs) + " testes\n";
-    s+=  "Média de Swaps: " + std::to_string(num_swaps/runs) + " swaps\n";
-    s+=  "Média de Comparações: " + std::to_string(comparations/runs) + " swaps\n";
-    s+=  "Média de Tempo: " + std::to_string(milisseconds/runs) + " ms\n"; 
+    if(runs == 0) return "\tEsse algoritmo não foi rodado nenhuma vez!!\n";
+
+    std::string s;
+    s+=  "\t-> Número de Testes: " + std::to_string(runs) + " testes\n";
+    s+=  "\t-> Média de Swaps: " + std::to_string(num_swaps/runs) + " swaps\n";
+    s+=  "\t-> Média de Comparações: " + std::to_string(comparations/runs) + " comparações\n";
+    s+=  "\t-> Média de Tempo: " + std::to_string(milisseconds/runs) + " ms\n"; 
     return s; 
 
 };
