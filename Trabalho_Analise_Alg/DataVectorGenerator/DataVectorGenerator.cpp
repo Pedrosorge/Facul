@@ -8,7 +8,6 @@ DataVectorGenerator::DataVectorGenerator() : generator(rd()) {};
 std::vector<int> DataVectorGenerator::genVectorRandomlyUniformed(unsigned int size){
 
     std::vector<int> vet(size);
-    // std::uniform_int_distribution<> dis(-2*size,2*size);
     std::uniform_int_distribution<> dis(0,4*size);
 
     std::generate(vet.begin(),vet.end(), [&](){ return dis(generator); });
@@ -35,4 +34,16 @@ std::vector<int> DataVectorGenerator::genVectorAlreadyDecrescentSorted(unsigned 
     return vet;
 
 };
+
+std::vector<int> DataVectorGenerator::genVectorWithRepetitionOfElements(unsigned int size){
+    
+    std::vector<int> vet(size);
+    std::uniform_int_distribution<> dis(0,size/2);
+
+    std::generate(vet.begin(),vet.end(), [&](){ return dis(generator); });
+
+    return vet;
+
+};
+
 

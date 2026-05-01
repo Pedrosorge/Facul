@@ -10,6 +10,7 @@ class QuickSort : public ISortAlgorithm{
     private:
         unsigned long long runs;
         unsigned long long num_swaps;
+        unsigned long long comparations;
         long long milisseconds; 
     
     public:

@@ -60,6 +60,8 @@ void RadixSort::countingSort(std::vector<int> &vet, unsigned long long exp) {
 
 std::string RadixSort::generateRelatory(){
 
+    if(runs == 0) return "Esse algoritmo não foi rodado nenhuma vez!!!";
+    
     std::string s = "---------------- Radix Sort -------------------\n";
     s+= "Número de Testes: " + std::to_string(runs) + " testes\n";
     s+= "Média de Tempo " + std::to_string(milisseconds/runs) + " ms\n";

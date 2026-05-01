@@ -15,6 +15,7 @@ class DataVectorGenerator{
         std::vector<int> genVectorRandomlyUniformed(unsigned int size);
         std::vector<int> genVectorAlreadyAscendentSorted(unsigned int size);
         std::vector<int> genVectorAlreadyDecrescentSorted(unsigned int size);
+        std::vector<int> genVectorWithRepetitionOfElements(unsigned int size);
             
 };
 

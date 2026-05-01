@@ -9,7 +9,8 @@ class MergeSort : public ISortAlgorithm {
 
     private:
         unsigned long long runs;
-        long long milisseconds; 
+        unsigned long long comparations;
+        long long milisseconds;
         std::vector<int> aux;
 
     public: 
