@@ -11,6 +11,7 @@ class QuickSort : public ISortAlgorithm{
         unsigned long long runs;
         unsigned long long num_swaps;
         unsigned long long comparations;
+        unsigned long long memory_kb;
         long long milisseconds; 
     
     public:

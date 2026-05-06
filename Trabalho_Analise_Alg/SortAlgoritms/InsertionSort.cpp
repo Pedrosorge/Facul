@@ -11,7 +11,7 @@ InsertionSort::InsertionSort() {
 
 std::vector<int> InsertionSort::sort(std::vector<int> vet) {
 
-    if(vet.size()>=1000000) {
+    if(vet.size()>=100000) {
         throw std::runtime_error("Ordenar esse vetor pode levar segundos usando Insertion Sort!!");
     }
 

@@ -1,5 +1,4 @@
 #include "QuickSort.h"
-
 #include <vector>
 #include <string>
 #include "../Timer/Timer.h"
@@ -21,7 +20,7 @@ std::vector<int> QuickSort::sort(std::vector<int> vet){
 
     milisseconds += t.endTimer();
     runs++;
-
+    
     return vet;
 
 };
@@ -79,6 +78,7 @@ std::string QuickSort::generateRelatory(){
     s+=  "\t-> Número de Testes: " + std::to_string(runs) + " testes\n";
     s+=  "\t-> Média de Swaps: " + std::to_string(num_swaps/runs) + " swaps\n";
     s+=  "\t-> Média de Comparações: " + std::to_string(comparations/runs) + " comparações\n";
+    s+=  "\t-> Média de Consumo de Memória: " + std::to_string(memory_kb/runs) + " KB\n";
     s+=  "\t-> Média de Tempo: " + std::to_string(milisseconds/runs) + " ms\n"; 
     return s; 
 

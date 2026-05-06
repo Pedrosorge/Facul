@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall 
+CXXFLAGS = -Wall -g
 TARGET = teste
 
 SRCS = $(shell find . -name "*.cpp")

@@ -45,8 +45,8 @@ int main() {
 
     // VETORES COM VALORES ALEATÓRIOS
     for(int s=0;s<VECTOR_SIZES.size();s++){
-        vector<int> vet_teste = vector_gen.genVectorRandomlyUniformed(VECTOR_SIZES[s]);
         for(int i=0;i<NUM_TEST;i++){
+            vector<int> vet_teste = vector_gen.genVectorRandomlyUniformed(VECTOR_SIZES[s]);
             for(auto r: rand){
                 vector<int> cp_vet_teste(vet_teste.begin(),vet_teste.end());
                 try{
@@ -61,8 +61,8 @@ int main() {
 
     // VETORES COM VALORES CRESCENTES
     for(int s=0;s<VECTOR_SIZES.size();s++){
-        vector<int> vet_teste = vector_gen.genVectorAlreadyAscendentSorted(VECTOR_SIZES[s]);
         for(int i=0;i<NUM_TEST;i++){
+            vector<int> vet_teste = vector_gen.genVectorAlreadyAscendentSorted(VECTOR_SIZES[s]);
             for(auto r: asc_sorted){
                 vector<int> cp_vet_teste(vet_teste.begin(),vet_teste.end());
                 try{
@@ -77,8 +77,8 @@ int main() {
 
     // VETORES COM VALORES DECRESCENTES
     for(int s=0;s<VECTOR_SIZES.size();s++){
-        vector<int> vet_teste = vector_gen.genVectorAlreadyDecrescentSorted(VECTOR_SIZES[s]);
         for(int i=0;i<NUM_TEST;i++){
+            vector<int> vet_teste = vector_gen.genVectorAlreadyDecrescentSorted(VECTOR_SIZES[s]);
             for(auto r: desc_sorted){
                 vector<int> cp_vet_teste(vet_teste.begin(),vet_teste.end());
                 try{
@@ -93,8 +93,8 @@ int main() {
 
     // VETORES COM VALORES REPETIDOS
     for(int s=0;s<VECTOR_SIZES.size();s++){
-        vector<int> vet_teste = vector_gen.genVectorWithRepetitionOfElements(VECTOR_SIZES[s]);
         for(int i=0;i<NUM_TEST;i++){
+            vector<int> vet_teste = vector_gen.genVectorWithRepetitionOfElements(VECTOR_SIZES[s]);
             for(auto r: rep){
                 vector<int> cp_vet_teste(vet_teste.begin(),vet_teste.end());
                 try{
