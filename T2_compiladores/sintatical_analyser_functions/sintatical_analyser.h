@@ -47,8 +47,7 @@ void cham_funcao();             // Regra 25
 29. <letra> 
 */
 
-
-
+void numero();                  // Regra 26
 void identificador();           // Regra 28
 
 
