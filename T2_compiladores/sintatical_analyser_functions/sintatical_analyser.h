@@ -3,9 +3,12 @@
 #include <stdio.h>
 #include "../error_handler/error_handler.h"
 
-extern char buffer_sinal[500];
-char buffer_anterior[500];
-int token_devolvido;
+#define MAX_HISTORIC_CAPACITY 5
+
+extern char buffer_sinal[500]; // Buffee onde os tokens lidos são armazendos
+extern long historico_posicoes[MAX_HISTORIC_CAPACITY]; // Armazena as posições de leitura anteriores
+extern int wri_hist;  // Indice de escrita no histórico
+
 extern FILE *arq_read, *sintatical_errors;
 
 void define_object_file(FILE * arq);
@@ -15,8 +18,8 @@ void ANTERIOR_ANALIZER(FILE *arq);
 
 void programa();                // Regra 1
 void bloco();                   // Regra 2 
-void parte_dec_variavel();      // Regra 3
-void dec_variavel();            // Regra 4
+void parte_dec_variaveis();      // Regra 3
+void dec_variaveis();            // Regra 4
 void lista_identificadores();   // Regra 5
 void parte_dec_sub_rotina();    // Regra 6
 void dec_procedimento();        // Regra 7

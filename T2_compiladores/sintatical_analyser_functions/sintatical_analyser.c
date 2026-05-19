@@ -7,8 +7,8 @@
 
 FILE *arq_read = NULL; // Ponteiro para arquivo de leitura dos tokens
 char buffer_sinal[500]; // Buffer onde sao armazenados os tokens
-char buffer_anterior[500]; // Armazena o token que acabou de ser substituído
-int token_devolvido = 0;
+long historico_posicoes[MAX_HISTORIC_CAPACITY]; // Arqmazena as posições de leitura anteriores
+int wri_hist = 0;  // Indice de escrita no histórico
 
 // Difine arquivo com os tokens que serão verificados
 void define_object_file(FILE * arq){
@@ -18,13 +18,8 @@ void define_object_file(FILE * arq){
 // Avança token a ser analizado
 int PROXIMO_ANALIZER(FILE *arq){
 
-    if(token_devolvido){
-        strcpy(buffer_sinal,buffer_anterior);
-        token_devolvido = 0;
-        return 1;
-    }
-
-    strcpy(buffer_anterior,buffer_sinal);
+    historico_posicoes[wri_hist] = ftell(arq);
+    wri_hist = (wri_hist + 1) % MAX_HISTORIC_CAPACITY;
 
     if(fscanf(arq,"%499s ", buffer_sinal) != EOF) return 1;
     return 0;
@@ -32,7 +27,8 @@ int PROXIMO_ANALIZER(FILE *arq){
 
 // Volta um token a ser lido
 void ANTERIOR_ANALIZER(FILE *arq){
-    token_devolvido = 1;
+    wri_hist = (wri_hist - 1 + MAX_HISTORIC_CAPACITY) % MAX_HISTORIC_CAPACITY;
+    fseek(arq, historico_posicoes[wri_hist], SEEK_SET);
 }
 
 // FEITO!!!
@@ -108,7 +104,7 @@ void com_composto() {
         sprintf(expected_token,"op_%d", searchWord(ID_operators,";"));
 
     } while(!strcmp(expected_token,buffer_sinal));
-    ANTERIOR_ANALIZER();
+    ANTERIOR_ANALIZER(arq_read);
 
     // Verifica 'end'
     if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
@@ -127,7 +123,7 @@ void comando() {
     if(!strncmp(buffer_sinal,"num_",4)) {
         // Verifica ':'
         if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
-        sprintf(expected_token,"op_%d", searchWord(ID_operators,";"));
+        sprintf(expected_token,"op_%d", searchWord(ID_operators,":"));
         if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
     }
     else ANTERIOR_ANALIZER(arq_read);
@@ -137,10 +133,258 @@ void comando() {
 
 }
 
-
+// FEITO !!!
 // Desenvolve símbolo não terminal <comando sem rótulo> (ATUALIZAR ÁREAS DE ERRO)
 void com_sem_rotulo() {
     
+    char expected_token[50];
+    
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; } 
+    
+    // Verifica se pode ser <comando composto>
+    sprintf(expected_token, "res_%d", searchWord(ID_reserved,"begin"));
+    if(!strcmp(expected_token,buffer_sinal)) {
+        ANTERIOR_ANALIZER(arq_read);
+        com_composto();
+        return;
+    }
+
+    // Verifica se pode ser <comando condicional>
+    sprintf(expected_token, "res_%d", searchWord(ID_reserved,"if"));
+    if(!strcmp(expected_token,buffer_sinal)) {
+        ANTERIOR_ANALIZER(arq_read);
+        com_condicional();
+        return;
+    }
+
+    // Verifica se pode ser <comando repetitivo>
+    sprintf(expected_token, "res_%d", searchWord(ID_reserved,"while"));
+    if(!strcmp(expected_token,buffer_sinal)) {
+        ANTERIOR_ANALIZER(arq_read);
+        com_repetitivo();
+        return;
+    }
+ 
+    // Verifica se pode ser <atribuição>
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    sprintf(expected_token, "op_%d", searchWord(ID_operators,":="));
+    if(!strcmp(expected_token,buffer_sinal)) {
+        ANTERIOR_ANALIZER(arq_read);
+        ANTERIOR_ANALIZER(arq_read);
+        atribuicao();
+        return;
+    }
+    
+    
+    ANTERIOR_ANALIZER(arq_read);
+    ANTERIOR_ANALIZER(arq_read);
+    // Se não for nenhum dos anteriores, deve ser <chamada de proccediemento>
+    cham_procedimento();
+
+}
+
+// FEITO !!!
+// Desenvolve símbolo não terminal <atribuição> (ATUALIZAR ÁREAS DE ERRO)
+void atribuicao() {
+    char expected_token[50];
+
+    // Verifica <variavel>
+    variavel();
+
+    // Verifica ':='
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    sprintf(expected_token, "op_%d", searchWord(ID_operators, ":="));
+    if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
+
+    // Verifica <expressão>
+    expressao();
+
+}
+
+// ACHO QUE FEITO !!!
+// Desenvolve símbolo não terminal <chamada de procedimento> (ATUALIZAR ÁREAS DE ERRO)
+void cham_procedimento() {
+    char expected_token[50];
+
+    // Verifica <identificador>
+    identificador();
+
+    // Verifica se tem <lista de expressões>
+    if(PROXIMO_ANALIZER(arq_read)){
+        sprintf(expected_token,"op_%d",searchWord(ID_operators,"("));
+        if(!strcmp(expected_token,buffer_sinal)){
+            lista_expressoes();
+
+            // Verifica ')'
+            if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+            sprintf(expected_token,"op_%d",searchWord(ID_operators,")"));
+            if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
+            return;
+        }
+        else ANTERIOR_ANALIZER(arq_read);
+    }
+
+}
+
+// FEITO !!!
+// Desenvolve símbolo não terminal <comando condicional> (ATUALIZAR ÁREAS DE ERRO)
+void com_condicional() { 
+    char expected_token[50];
+
+    // Verifica 'if'
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    sprintf(expected_token,"res_%d",searchWord(ID_reserved,"if"));
+    if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
+
+    // Verifica <expressão>
+    expressao();
+
+    // Verifica 'then'
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    sprintf(expected_token,"res_%d",searchWord(ID_reserved,"then"));
+    if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
+
+    // Verifica <comando sem rótulo>
+    com_sem_rotulo();
+
+    // Verifica se tem 'else'
+    if(PROXIMO_ANALIZER(arq_read)) { 
+        sprintf(expected_token,"res_%d",searchWord(ID_reserved,"else"));
+        if(!strcmp(expected_token,buffer_sinal)) { 
+            // Verifica <comando sem rótulo>
+            com_sem_rotulo();
+        }
+        else ANTERIOR_ANALIZER(arq_read);
+    }
+
+}
+
+// FEITO !!!    
+// Desenvolve símbolo não terminal <comando repetitivo> (ATUALIZAR ÁREAS DE ERRO)
+void com_repetitivo() {
+    char expected_token[50];
+
+    // Verifica 'while'
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    sprintf(expected_token,"res_%d",searchWord(ID_reserved,"while"));
+    if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return;}
+
+    // Verifica <expressão>
+    expressao();
+
+    // Verifica 'do'
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    sprintf(expected_token,"res_%d",searchWord(ID_reserved,"do"));
+    if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return;}
+
+    // Verifica <comando sem rótulo>
+    com_sem_rotulo();
+
+}
+
+// FEITO !!!
+// Desenvolve símbolo não terminal <lista de expressões> (ATUALIZAR ÁREAS DE ERRO)
+void lista_expressoes() {
+    char expected_token[50];
+
+    do {
+        // Verifica <expressão>
+        expressao();
+
+        // Verifica se tem ','
+        if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+        sprintf(expected_token,"op_%d",searchWord(ID_operators,",")); 
+    } while(!strcmp(expected_token,buffer_sinal));
+    ANTERIOR_ANALIZER(arq_read);
+
+}
+
+// FEITO !!!
+// Desenvolve símbolo não terminal <expressão> (ATUALIZAR ÁREAS DE ERRO)
+void expressao() {
+    char expected_token[50];
+
+    // Verifica <expressão simples>
+    exprecao_simples();
+
+    // Verifica se tem [<relação> <expressão simples>]
+    if(PROXIMO_ANALIZER(arq_read)){
+
+        // Verifica se pode ser <relação>
+        char *poss[] = {"<>","<",">","=","<=",">="};
+        int i;
+        for(i=0;i<6;i++){
+            sprintf(expected_token,"op_%d", searchWord(ID_operators,poss[i]));
+            if(!strcmp(expected_token,buffer_sinal)) break;
+        }
+        if(i==6){ ANTERIOR_ANALIZER(arq_read); return; } 
+
+        // Verifica <realação>
+        relacao();
+
+        // Verifica <expressão simples>
+        exprecao_simples();
+        
+    }
+
+}
+
+// FEITO !!!
+// Desenvolve símbolo não terminal <relação> (ATUALIZAR ÁREAS DE ERRO)
+void relacao() {
+    char expected_token[50];
+
+    char *poss[] = {"<>","<",">","=","<=",">="};
+    int i;
+    for(i=0;i<6;i++){
+        sprintf(expected_token,"op_%d", searchWord(ID_operators,poss[i]));
+        if(!strcmp(expected_token,buffer_sinal)) break;
+    }
+    if(i==6){ ERRO(sintatical_errors,0,0); return; } 
+
+}
+
+// FEITO !!!
+// Desenvolve símbolo não terminal <expressão simples> (ATUALIZAR ÁREAS DE ERRO)
+void exprecao_simples(){
+    char expected_token[50];
+
+    int tem_sinal = 0;
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    
+    // Verifica se tem '-' ou '+'
+    sprintf(expected_token,"op_%d",searchWord(ID_operators,"+"));
+    if(!strcmp(expected_token,buffer_sinal)) tem_sinal = 1;
+
+    sprintf(expected_token,"op_%d",searchWord(ID_operators,"-"));
+    if(!strcmp(expected_token,buffer_sinal)) tem_sinal = 1;
+
+    if(tem_sinal){ 
+        if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    }
+    else ANTERIOR_ANALIZER(arq_read);
+
+    do {
+        // Verifica <termo>
+        termo();
+
+        if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+        
+        // Verifica '+'
+        sprintf(expected_token,"op_%d",searchWord(ID_operators,"+"));
+        if(!strcmp(expected_token,buffer_sinal)) continue;
+        // Verifica '-'
+        sprintf(expected_token,"op_%d",searchWord(ID_operators,"-"));
+        if(!strcmp(expected_token,buffer_sinal)) continue;
+        // Verifica 'or'
+        sprintf(expected_token,"res_%d",searchWord(ID_reserved,"or"));
+        if(!strcmp(expected_token,buffer_sinal)) continue;
+
+        break;
+
+    } while( 1 );
+    ANTERIOR_ANALIZER(arq_read);
+
 }
 
 // FEITO
@@ -165,10 +409,10 @@ void parte_dec_sub_rotina() {
     
         // Verifica 'function'
         if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
-        sprintf(expected_token,"res_%d", searchWord(ID_reserved,"procedure"));
+        sprintf(expected_token,"res_%d", searchWord(ID_reserved,"function"));
         if(!strcmp(expected_token,buffer_sinal)){
             ANTERIOR_ANALIZER(arq_read);
-            dec_procedimento();
+            dec_funcao();
             
             // Verifica ';'
             if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
@@ -188,7 +432,7 @@ void parte_dec_sub_rotina() {
 void dec_funcao() {
     char expected_token[50];
 
-    // Verifica 'procedure'
+    // Verifica 'function'
     if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
     sprintf(expected_token,"res_%d", searchWord(ID_reserved,"function"));
     if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
@@ -203,12 +447,21 @@ void dec_funcao() {
         ANTERIOR_ANALIZER(arq_read);
         param_formais();
     }
+    else ANTERIOR_ANALIZER(arq_read);
 
+    // Verifica ':'
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+    sprintf(expected_token,"op_%d", searchWord(ID_operators,":"));
+    if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
+    
+    // Verifica  <identificador>
+    identificador();
+    
     // Verifica ';'
     if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
     sprintf(expected_token,"op_%d", searchWord(ID_operators,";"));
     if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
-
+    
     // Verifica <bloco>
     bloco();  
 
@@ -219,9 +472,9 @@ void dec_funcao() {
 void dec_procedimento() {
     char expected_token[50];
    
-    // Verifica 'function'
+    // Verifica 'procedure'
     if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
-    sprintf(expected_token,"res_%d", searchWord(ID_reserved,"function"));
+    sprintf(expected_token,"res_%d", searchWord(ID_reserved,"procedure"));
     if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
 
     // Verifica 'identificador'
@@ -234,16 +487,9 @@ void dec_procedimento() {
         ANTERIOR_ANALIZER(arq_read);
         param_formais();
     }
+    else ANTERIOR_ANALIZER(arq_read);
 
-    // Verifica ':'
-    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
-    sprintf(expected_token,"op_%d", searchWord(ID_operators,":"));
-    if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
-
-    // Verifica <identificador>
-    identificador();
-
-   // Verifica ';'
+    // Verifica ';'
     if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
     sprintf(expected_token,"op_%d", searchWord(ID_operators,";"));
     if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return; }
@@ -308,6 +554,99 @@ void sec_param_formais() {
 
 }
 
+// FEITO !!!
+// Desenvolve símbolo não terminal <termo> (ATUALIZAR ÁREAS DE ERRO)
+void termo() {
+    char expected_token[50];
+
+    do {
+
+        // Verifica <fator>
+        fator();
+
+        if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+        
+        // Verifica '*'
+        sprintf(expected_token,"op_%d", searchWord(ID_operators,"*"));
+        if(!strcmp(expected_token,buffer_sinal)) continue;
+
+        // Verifica 'div'
+        sprintf(expected_token,"res_%d", searchWord(ID_reserved,"div"));
+        if(!strcmp(expected_token,buffer_sinal)) continue;
+
+        // Verifica 'and'
+        sprintf(expected_token,"res_%d", searchWord(ID_reserved,"and"));
+        if(!strcmp(expected_token,buffer_sinal)) continue;
+
+        ANTERIOR_ANALIZER(arq_read);
+        break;
+
+    } while( 1 );
+
+}
+
+// FEITO !!!
+// Desenvolve símbolo não terminal <fator> (ATUALIZAR ÁREAS DE ERRO)
+void fator() {
+    char expected_token[50];
+
+    if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+
+    // Verifica se é 'not'
+    sprintf(expected_token,"res_%d",searchWord(ID_reserved,"not"));
+    if(!strcmp(expected_token,buffer_sinal)){
+        // Verifica <fator>
+        fator();
+        return;
+    }
+
+    // Verifica se é '('
+    sprintf(expected_token,"op_%d",searchWord(ID_operators,"("));
+    if(!strcmp(expected_token,buffer_sinal)){
+        // Verifica <expressão>
+        ANTERIOR_ANALIZER(arq_read);
+        expressao();
+        return;
+    }
+
+    // Verifica se é 'num_*'
+    if(!strncmp(buffer_sinal,"num_",4)){
+        return;
+    }
+
+    // Verifica se é <chamada de função>
+    ANTERIOR_ANALIZER(arq_read);
+    cham_funcao(); // Por consequencia já verifica se é variável
+
+    return;
+
+}
+
+// FEITO !!! 
+// Desenvolve símbolo não terminal <chamada de função> (ATUALIZAR ÁREAS DE ERRO)
+void cham_funcao() {
+    char expected_token[50];
+
+    // Verifica <identificador>
+    identificador();
+
+    // Verifica se tem <lista de expressões>
+    if(PROXIMO_ANALIZER(arq_read)) {
+        sprintf(expected_token,"op_%d",searchWord(ID_operators,"("));
+        if(!strcmp(expected_token,buffer_sinal)) {
+            ANTERIOR_ANALIZER(arq_read);
+            lista_expressoes();
+            
+            // Verifica ')'
+            if(!PROXIMO_ANALIZER(arq_read)) { ERRO(sintatical_errors,0,0); return; }
+            sprintf(expected_token,"op_%d",searchWord(ID_operators,")"));
+            if(strcmp(expected_token,buffer_sinal)) { ERRO(sintatical_errors,0,0); return;}
+
+            return;
+        }
+        ANTERIOR_ANALIZER(arq_read);
+    }
+}
 
 // FEITO !!!
 // Desenvolve símbolo não terminal <parte de declarações de variáveis> (ATUALIZAR ÁREAS DE ERRO)
@@ -381,11 +720,11 @@ void lista_identificadores() {
 
 }
 
-// 
+// FEITO !!!
 // Desenvolve símbolo não terminal <variável> (ATUALIZAR ÁREAS DE ERRO)
 void variavel() { 
     // Verifica <identificador>
-    identificador()
+    identificador();
 }
 
 // FEITO !!!

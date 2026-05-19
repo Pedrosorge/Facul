@@ -100,7 +100,13 @@ void CODIGO(){
                 if(!buff_point) // Se o buffer tiver vazio
                 {
                     flags = 0B1000;
-                    if(prox_pointer == '<' || prox_pointer == '>' || prox_pointer == ':'){
+                    if(prox_pointer == '<'){
+                        buffer[buff_point++] = prox_pointer;
+                        PROXIMO();
+                        if(prox_pointer == '=' || prox_pointer == '>') interruption = 0;
+                        else break;
+                    }
+                    else if(prox_pointer == '>' || prox_pointer == ':'){
                         buffer[buff_point++] = prox_pointer;
                         PROXIMO();
                         if(prox_pointer == '=') interruption = 0;
@@ -204,9 +210,9 @@ int main() {
     printf("Final da análise léxica!\n");
 
     // Inicio do analizador sintático
-    define_object_file(codes_only);
-    programa();
-    printf("Final da análise sintatica!\n");
+    // define_object_file(codes_only);
+    // programa();
+    // printf("Final da análise sintatica!\n");
 
     fprintf(destin,"\n\n----------------------- ERROS ENCONRTRADOS -----------------------------\n\n");
 
