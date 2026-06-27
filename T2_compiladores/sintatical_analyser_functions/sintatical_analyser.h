@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include "../error_handler/error_handler.h"
 
-#define MAX_HISTORIC_CAPACITY 5
+#define MAX_HISTORIC_CAPACITY 100
 
 extern char buffer_sinal[500]; // Buffee onde os tokens lidos são armazendos
 extern long historico_posicoes[MAX_HISTORIC_CAPACITY]; // Armazena as posições de leitura anteriores
+extern long historico_linhas[MAX_HISTORIC_CAPACITY]; // Armazena os números das linhas de leitura anteriores
 extern int wri_hist;  // Indice de escrita no histórico
+extern int line_counter; // Contador de linhas
 
 extern FILE *arq_read, *sintatical_errors;
 
@@ -36,7 +38,7 @@ void com_repetitivo();          // Regra 17
 void lista_expressoes();        // Regra 18
 void expressao();               // Regra 19
 void relacao();                 // Regra 20
-void exprecao_simples();        // Regra 21
+void expressao_simples();        // Regra 21
 void termo();                   // Regra 22
 void fator();                   // Regra 23
 void variavel();                // Regra 24

@@ -7,9 +7,10 @@ VectorError* initializeVector(){
 }
 
 // Insere elemento no final do vetor 
-void push_back(VectorError *vec,int err, int line){ 
+void push_back(VectorError *vec,char* details, int err, int line){ 
     VectorErrorNode *aux = (VectorErrorNode *)malloc(sizeof(VectorErrorNode));
 
+    aux->details = details;
     aux->next = NULL;
     aux->value_err = err;
     aux->value_line = line;

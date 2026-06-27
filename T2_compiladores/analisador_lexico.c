@@ -34,7 +34,10 @@ void PROXIMO(){
     
     if( prox_pointer == '\n' || prox_pointer == 0){
         line_pointer++;
-        if(prox_pointer) fputc(prox_pointer,destin);
+        if(prox_pointer) {
+            fputc(prox_pointer,destin);
+            fprintf(codes_only,"jump_line ");
+        }
         fprintf(destin,"%d\t", line_pointer);
     }
     
@@ -121,7 +124,7 @@ void CODIGO(){
             else{
                 printf("Caractere inválido: %c\n", prox_pointer);
                 fprintf(destin,"'ERROR' ");
-                push_back(error_vector, LEXICAL_ERROR_UNKNOW_CHAR, line_pointer);
+                push_back(error_vector, "nada",LEXICAL_ERROR_UNKNOW_CHAR, line_pointer);
                 unk_char=1;
                 flags=0;
             }
@@ -140,7 +143,7 @@ void CODIGO(){
         else if(!flags){ // ERRO DE SYNTAXE
             printf("palavra : %s não reconecida\n" , buffer);
             fprintf(destin,"'ERROR' ");
-            push_back(error_vector, LEXICAL_ERROR_BAD_FORMATTING, line_pointer);
+            push_back(error_vector,"nada", LEXICAL_ERROR_BAD_FORMATTING, line_pointer);
         }
         else if(flags & 0B1000){
 
@@ -210,9 +213,10 @@ int main() {
     printf("Final da análise léxica!\n");
 
     // Inicio do analizador sintático
-    // define_object_file(codes_only);
-    // programa();
-    // printf("Final da análise sintatica!\n");
+    fseek(codes_only,0,SEEK_SET);
+    define_object_file(codes_only);
+    programa();
+    printf("Final da análise sintatica!\n");
 
     fprintf(destin,"\n\n----------------------- ERROS ENCONRTRADOS -----------------------------\n\n");
 
